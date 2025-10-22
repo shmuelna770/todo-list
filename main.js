@@ -8,11 +8,6 @@ var inputNewTask = document.createElement("input");
 inputNewTask.placeholder = "enter new task";
 inputNewTask.id = "inputTask";
 root.appendChild(inputNewTask);
-// //submit task
-// const submitBtn = document.createElement("button");
-// submitBtn.textContent = "submit task";
-// submitBtn.id = "submitBtn";
-// root.appendChild(submitBtn);
 //task list area
 var todo = document.createElement("h2");
 todo.id = "todoTitle";
@@ -29,13 +24,14 @@ root.appendChild(done);
 var taskCompleted = document.createElement("div");
 taskCompleted.id = "taskCompleted";
 root.appendChild(taskCompleted);
-//
-function addTask() {
-    var value = inputNewTask.value.trim();
-    if (value === "") {
-        alert("please enter a task");
-        return;
-    }
+// // function to save in local sorage
+// function saveTask(){
+//     const tasks = Array.from(taskList.children).map(task =>{
+//     })
+// }
+//creat task 
+function createTask(value, complited) {
+    if (complited === void 0) { complited = false; }
     var task = document.createElement("div");
     task.id = "task";
     var output = document.createElement("span");
@@ -61,6 +57,7 @@ function addTask() {
     editBtn.textContent = "Edit";
     editBtn.id = "editBtn";
     editBtn.addEventListener("click", function () {
+        var orginaltext = output.textContent;
         if (editBtn.textContent === "Edit") {
             output.contentEditable = "true";
             output.focus();
@@ -71,8 +68,11 @@ function addTask() {
                     output.contentEditable = "false";
                     editBtn.textContent = "Edit";
                 }
-                if (event.key === "escape") {
+                if (event.key === "Escape") {
                     event.preventDefault();
+                    output.textContent = orginaltext;
+                    output.contentEditable = "false";
+                    editBtn.textContent = "Edit";
                 }
             });
         }
@@ -85,7 +85,23 @@ function addTask() {
     task.appendChild(output);
     task.appendChild(editBtn);
     task.appendChild(deleteTaskBtn);
+    if (complited) {
+        taskCompleted.appendChild(task);
+        task.style.color = "grey";
+    }
+    else {
+        taskList.appendChild(task);
+    }
     taskList.appendChild(task);
+}
+//
+function addTask() {
+    var value = inputNewTask.value.trim();
+    if (value === "") {
+        alert("please enter a task");
+        return;
+    }
+    createTask(value);
     inputNewTask.value = "";
 }
 inputNewTask.addEventListener("keydown", function (e) {
