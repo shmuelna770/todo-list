@@ -37,15 +37,19 @@ function addTask() {
         return;
     }
     var task = document.createElement("div");
-    task.textContent = value;
+    task.id = "task";
+    var output = document.createElement("span");
+    output.textContent = value;
     var checkBox = document.createElement("input");
     checkBox.type = "checkbox";
     checkBox.addEventListener("change", function () {
         if (checkBox.checked) {
             taskCompleted.appendChild(task);
+            task.style.color = "grey";
         }
         else {
             taskList.appendChild(task);
+            task.style = "None";
         }
     });
     var deleteTaskBtn = document.createElement("button");
@@ -53,7 +57,33 @@ function addTask() {
     deleteTaskBtn.addEventListener("click", function () {
         task.remove();
     });
+    var editBtn = document.createElement("button");
+    editBtn.textContent = "Edit";
+    editBtn.id = "editBtn";
+    editBtn.addEventListener("click", function () {
+        if (editBtn.textContent === "Edit") {
+            output.contentEditable = "true";
+            output.focus();
+            editBtn.textContent = "save";
+            output.addEventListener("keydown", function handleSave(event) {
+                if (event.key === "Enter") {
+                    event.preventDefault();
+                    output.contentEditable = "false";
+                    editBtn.textContent = "Edit";
+                }
+                if (event.key === "escape") {
+                    event.preventDefault();
+                }
+            });
+        }
+        else {
+            task.contentEditable = "false";
+            editBtn.textContent = "Edit";
+        }
+    });
     task.appendChild(checkBox);
+    task.appendChild(output);
+    task.appendChild(editBtn);
     task.appendChild(deleteTaskBtn);
     taskList.appendChild(task);
     inputNewTask.value = "";

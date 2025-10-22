@@ -31,6 +31,8 @@ body {
     width: 100%;
     border: 1px solid black;
     border-radius: 10px;
+    overflow: auto;
+
 }
 
 #taskCompleted {
@@ -38,11 +40,13 @@ body {
     width: 100%;
     border: 1px solid black;
     border-radius: 10px;
+    overflow: auto;
 }
 
 #todoTitle {
     color: rgb(61, 61, 61);
 }
+
 #doneTitle {
     color: rgb(61, 61, 61);
 }
@@ -52,4 +56,11 @@ body {
     height: 5%;
     background-color: rgba(240, 248, 255, 0.132);
     border-radius: 10px;
+    /* padding-left: 10px; */
+}
+
+#task {
+    display: flex;
+    gap: 5px;
+    /* justify-content: space-between; */
 }
