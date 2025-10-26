@@ -1,5 +1,6 @@
 const root = document.getElementById("root");
 if (!root) throw new Error("root not found");
+const rootTS = root as HTMLElement;
 
 const title = document.createElement("h1");
 title.textContent = "ToDo List";
@@ -7,14 +8,21 @@ title.id = "title";
 root.appendChild(title);
 
 //input a new task + lable
-const lable = document.createElement("label");
-lable.textContent = "enter new task:";
-lable.htmlFor = "inputTask";
-root.appendChild(lable);
+const inputLable = document.createElement("label");
+inputLable.textContent = "enter new task:";
+inputLable.id = "inputLabel";
+inputLable.htmlFor = "inputTask";
+
 const inputNewTask = document.createElement("input");
+inputNewTask.type = "text";
 inputNewTask.id = "inputTask";
 inputNewTask.placeholder = "type here";
-root.appendChild(inputNewTask);
+
+const taskForm = document.createElement("form");
+taskForm.className = "formTask";
+taskForm.appendChild(inputLable);
+taskForm.appendChild(inputNewTask);
+rootTS.appendChild(taskForm);
 
 //task list area
 const todo = document.createElement("h2");
@@ -39,13 +47,22 @@ let taskCounter = 0;
 //
 function addTask() {
   const value = inputNewTask.value.trim();
-  if (value === "") {
+
+  const existingError = taskForm.querySelector("span");
+  if (existingError) existingError.remove();
+
+  const errorMsg = document.createElement("span");
+  errorMsg.style.color = "red";
+  errorMsg.setAttribute("aria-live", "polite");
+  taskForm.appendChild(errorMsg);
+  if (value.trim() === "") {
     inputNewTask.setAttribute("aria-invalid", "true");
-    inputNewTask.placeholder = "please enter a value";
+    errorMsg.textContent = "please enter a value";
+    inputNewTask.focus();
     return;
   }
   inputNewTask.removeAttribute("aria-invalid");
-  inputNewTask.placeholder = "type here";
+  errorMsg.textContent = "";
 
   const task = document.createElement("li");
 
@@ -65,7 +82,9 @@ function addTask() {
   });
 
   const deleteTaskBtn = document.createElement("button");
-  deleteTaskBtn.textContent = "x";
+  deleteTaskBtn.type = "button";
+  deleteTaskBtn.className = "deleteBtn";
+  deleteTaskBtn.textContent = "delete task";
   deleteTaskBtn.addEventListener("click", () => {
     task.remove();
   });
@@ -76,8 +95,10 @@ function addTask() {
   taskList.appendChild(task);
 
   inputNewTask.value = "";
+  inputNewTask.focus();
 }
 
-inputNewTask.addEventListener("keydown", (e: KeyboardEvent) => {
-  if (e.key === "Enter") addTask();
+taskForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  addTask();
 });
