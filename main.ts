@@ -45,16 +45,41 @@ const taskCompleted = document.createElement("ul");
 taskCompleted.className = "task-area";
 root.appendChild(taskCompleted);
 
+function saveTasks() {
+  const tasks: { text: string; completed: boolean }[] = [];
+
+  taskList.querySelectorAll("li").forEach((li) => {
+    const label = li.querySelector("label");
+    const checkBox = li.querySelector("input[type=checkbox]") as HTMLInputElement;
+    if (!label || !checkBox) return;
+    tasks.push({ text: label.textContent || "", completed: checkBox.checked });
+  });
+  taskCompleted.querySelectorAll("li").forEach((li) => {
+    const label = li.querySelector("label");
+    const checkBox = li.querySelector("input[type=checkbox]") as HTMLInputElement;
+    if (!label || !checkBox) return;
+    tasks.push({ text: label.textContent || "", completed: checkBox.checked });
+  });
+  localStorage.setItem("todoTasks",JSON.stringify(tasks))
+}
+
+function loadTasks(){
+  const tasksJson = localStorage.getItem("todoTasks")
+  if(!tasksJson)return;
+  const tasks :{text:string; completed: boolean}[] = JSON.parse(tasksJson)
+  tasks.forEach((task)=>createTask(task.text,task.completed))
+}
 // counter for unique id
 let taskCounter = 0;
 
 // create a single task
-function createTask(value: string) {
+function createTask(value: string ,completed:boolean = false) {
   const task = document.createElement("li");
 
   const checkBox = document.createElement("input");
   checkBox.type = "checkbox";
   checkBox.id = `taskCheckbox-${taskCounter++}`;
+  checkBox.checked = completed
 
   const label = document.createElement("label");
   label.htmlFor = checkBox.id;
@@ -68,18 +93,23 @@ function createTask(value: string) {
       taskList.appendChild(task);
       task.style.color = "";
     }
+    saveTasks();
   });
 
   const deleteTaskBtn = document.createElement("button");
   deleteTaskBtn.type = "button";
-  deleteTaskBtn.className = "deleteBtn";
+  deleteTaskBtn.className = "buttons";
   deleteTaskBtn.textContent = "delete task";
+  
   deleteTaskBtn.addEventListener("click", () => {
     task.remove();
+    saveTasks();
   });
 
   const editBtn = document.createElement("button");
   editBtn.textContent = "Edit";
+  editBtn.className = "buttons";
+  
   editBtn.addEventListener("click", () => {
     const originalText = label.textContent || "";
     if (editBtn.textContent === "Edit") {
@@ -92,6 +122,7 @@ function createTask(value: string) {
           event.preventDefault();
           label.contentEditable = "false";
           editBtn.textContent = "Edit";
+          saveTasks();
           label.removeEventListener("keydown", handleKey);
         }
         if (event.key === "Escape") {
@@ -107,6 +138,7 @@ function createTask(value: string) {
       label.contentEditable = "false";
       editBtn.textContent = "Edit";
       if (label.textContent?.trim() === "") label.textContent = originalText;
+      saveTasks();
     }
   });
 
@@ -115,7 +147,12 @@ function createTask(value: string) {
   task.appendChild(editBtn);
   task.appendChild(deleteTaskBtn);
 
-  taskList.appendChild(task);
+  if(completed){
+    taskCompleted.appendChild(task)
+    task.style.color = "grey"
+  }else{
+    taskList.appendChild(task);
+  }
 }
 
 // add task
@@ -150,4 +187,7 @@ function addTask() {
 taskForm.addEventListener("submit", (e) => {
   e.preventDefault();
   addTask();
+});
+window.addEventListener("load",()=>{
+  loadTasks();
 });

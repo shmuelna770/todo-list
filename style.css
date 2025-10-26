@@ -80,7 +80,7 @@ input[type="checkbox"] {
     cursor: pointer;
 }
 
-.deleteBtn {
+.buttons {
     color: azure;
     background-color: rgb(161, 24, 24);
     border-radius: 5px;
@@ -89,12 +89,12 @@ input[type="checkbox"] {
 
 }
 
-.deleteBtn:hover {
+.buttons:hover {
     cursor: pointer;
     color: rgb(161, 24, 24);
     background-color: azure;
 }
 
-.deleteBtn:focus {
+.buttons:focus {
     outline: 1px solid #000000;
 }
