@@ -1,52 +1,70 @@
 const root = document.getElementById("root");
 if (!root) throw new Error("root not found");
+const rootTS = root as HTMLElement;
 
 const title = document.createElement("h1");
 title.textContent = "ToDo List";
 title.id = "title";
 root.appendChild(title);
 
-//input a new task
-const label = document.createElement("label");
-label.textContent = "enter new task:";
-label.htmlFor = "inputTask";
-root.appendChild(label);
+//input a new task + lable
+const inputLable = document.createElement("label");
+inputLable.textContent = "enter new task:";
+inputLable.id = "inputLabel";
+inputLable.htmlFor = "inputTask";
+
 const inputNewTask = document.createElement("input");
+inputNewTask.type = "text";
 inputNewTask.id = "inputTask";
-inputNewTask.placeholder = "enter new task";
-root.appendChild(inputNewTask);
+inputNewTask.placeholder = "type here";
+
+const taskForm = document.createElement("form");
+taskForm.className = "formTask";
+taskForm.appendChild(inputLable);
+taskForm.appendChild(inputNewTask);
+rootTS.appendChild(taskForm);
 
 //task list area
 const todo = document.createElement("h2");
-todo.id = "todoTitle";
+todo.className = "section-title";
 todo.textContent = "ToDo";
 root.appendChild(todo);
 const taskList = document.createElement("ul");
-taskList.id = "task-area";
+taskList.className = "task-area";
 root.appendChild(taskList);
 
 // task list complited area
 const done = document.createElement("h2");
 done.textContent = "Done";
-done.id = "doneTitle";
+done.className = "section-title";
 root.appendChild(done);
 const taskCompleted = document.createElement("ul");
-taskCompleted.id = "task-area";
+taskCompleted.className = "task-area";
 root.appendChild(taskCompleted);
 
-// // function to save in local sorage
-// function saveTask(){
-//     const tasks = Array.from(taskList.children).map(task =>{
-
-//     })
-// }
+// counter for task unique id
 let taskCounter = 0;
-//creat task
-function createTask(value: string, complited = false) {
+//
+function addTask() {
+  const value = inputNewTask.value.trim();
+
+  const existingError = taskForm.querySelector("span");
+  if (existingError) existingError.remove();
+
+  const errorMsg = document.createElement("span");
+  errorMsg.style.color = "red";
+  errorMsg.setAttribute("aria-live", "polite");
+  taskForm.appendChild(errorMsg);
+  if (value.trim() === "") {
+    inputNewTask.setAttribute("aria-invalid", "true");
+    errorMsg.textContent = "please enter a value";
+    inputNewTask.focus();
+    return;
+  }
+  inputNewTask.removeAttribute("aria-invalid");
+  errorMsg.textContent = "";
+
   const task = document.createElement("li");
-  task.id = "task";
-  const output: HTMLSpanElement = document.createElement("span");
-  output.textContent = value;
 
   const checkBox = document.createElement("input");
   checkBox.type = "checkbox";
@@ -55,7 +73,6 @@ function createTask(value: string, complited = false) {
   const label = document.createElement("label");
   label.htmlFor = checkBox.id;
   label.textContent = value;
-
   checkBox.addEventListener("change", () => {
     if (checkBox.checked) {
       taskCompleted.appendChild(task);
@@ -67,7 +84,9 @@ function createTask(value: string, complited = false) {
   });
 
   const deleteTaskBtn = document.createElement("button");
-  deleteTaskBtn.textContent = "x";
+  deleteTaskBtn.type = "button";
+  deleteTaskBtn.className = "deleteBtn";
+  deleteTaskBtn.textContent = "delete task";
   deleteTaskBtn.addEventListener("click", () => {
     task.remove();
   });
@@ -101,8 +120,7 @@ function createTask(value: string, complited = false) {
   });
 
   task.appendChild(checkBox);
-  task.appendChild(output);
-  task.appendChild(editBtn);
+  task.appendChild(label);
   task.appendChild(deleteTaskBtn);
 
   if (complited) {
@@ -128,8 +146,10 @@ function addTask() {
   createTask(value);
 
   inputNewTask.value = "";
+  inputNewTask.focus();
 }
 
-inputNewTask.addEventListener("keydown", (e: KeyboardEvent) => {
-  if (e.key === "Enter") addTask();
+taskForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  addTask();
 });
