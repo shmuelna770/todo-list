@@ -4,7 +4,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: antiquewhite;
+    background-color: #F1FAEE;
 }
 
 #root {
@@ -18,7 +18,7 @@ body {
 }
 
 #title {
-    color: #0033aa;
+    color: #00A8E8;
     width: 100%;
     text-align: center;
 }
@@ -26,21 +26,23 @@ body {
 .task-area {
     max-height: 20vh;
     width: 100%;
-    border: 2px solid brown;
+    border: 2px solid #007EA7;
     border-radius: 10px;
     overflow: auto;
 }
 
 .section-title {
-    color: rgb(61, 61, 61);
+    color: #003459;
 }
 
 
 #inputTask {
     height: 1.5rem;
-    background-color: rgba(240, 248, 255, 0.132);
+    max-width: 100%;
+    background-color: #D0F0FD;
     border-radius: 10px;
     margin: 0.3rem;
+    box-sizing: border-box;
 }
 
 #inputTask:focus {
@@ -49,13 +51,15 @@ body {
 }
 
 #inputLabel {
-    color: #0033aa;
+    color: #00A8E8;
     font-size: 1.2rem;
     margin-right: 0.3rem;
+    gap: 0.5rem;
 }
 
 .formTask {
     display: flex;
+    flex-wrap: wrap;
     align-items: center;
 }
 
@@ -80,21 +84,34 @@ input[type="checkbox"] {
     cursor: pointer;
 }
 
-.deleteBtn {
-    color: azure;
-    background-color: rgb(161, 24, 24);
+.buttons {
+    color: #ffff;
+    background-color:#00A8E8;
     border-radius: 5px;
     padding: 0.1rem 0.6rem;
     margin: 0.1rem;
 
 }
 
-.deleteBtn:hover {
+.buttons:hover {
     cursor: pointer;
-    color: rgb(161, 24, 24);
+    color: #00A8E8;
     background-color: azure;
 }
 
-.deleteBtn:focus {
+.buttons:focus {
     outline: 1px solid #000000;
+}
+
+.buttons-container {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    width: 100%;
+    margin: 0.7rem;
+}
+
+.buttons-container .buttons {
+    padding: 0.5rem 0.8rem;
 }
