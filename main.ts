@@ -48,18 +48,15 @@ root.appendChild(taskCompleted);
 function saveTasks() {
   const tasks: { text: string; completed: boolean }[] = [];
 
-  taskList.querySelectorAll("li").forEach((li) => {
-    const label = li.querySelector("label");
-    const checkBox = li.querySelector("input[type=checkbox]") as HTMLInputElement;
-    if (!label || !checkBox) return;
-    tasks.push({ text: label.textContent || "", completed: checkBox.checked });
+  [taskList,taskCompleted].forEach((list) => {
+    list.querySelectorAll("li").forEach((li)=>{
+      const label = li.querySelector("label");
+      const checkBox = li.querySelector("input[type=checkbox]") as HTMLInputElement;
+      if (!label || !checkBox) return;
+      tasks.push({ text: label.textContent || "", completed: checkBox.checked });
+    })
   });
-  taskCompleted.querySelectorAll("li").forEach((li) => {
-    const label = li.querySelector("label");
-    const checkBox = li.querySelector("input[type=checkbox]") as HTMLInputElement;
-    if (!label || !checkBox) return;
-    tasks.push({ text: label.textContent || "", completed: checkBox.checked });
-  });
+ 
   localStorage.setItem("todoTasks",JSON.stringify(tasks))
 }
 
@@ -84,6 +81,11 @@ function createTask(value: string ,completed:boolean = false) {
   const label = document.createElement("label");
   label.htmlFor = checkBox.id;
   label.textContent = value;
+  label.addEventListener("click",(e)=>{
+    if(label.isContentEditable){ 
+    e.preventDefault();
+    }
+  })
 
   checkBox.addEventListener("change", () => {
     if (checkBox.checked) {
@@ -182,6 +184,8 @@ function addTask() {
 
   inputNewTask.value = "";
   inputNewTask.focus();
+
+  saveTasks();
 }
 
 taskForm.addEventListener("submit", (e) => {
