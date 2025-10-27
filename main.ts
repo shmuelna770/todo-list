@@ -45,6 +45,35 @@ const taskCompleted = document.createElement("ul");
 taskCompleted.className = "task-area";
 root.appendChild(taskCompleted);
 
+// clear all tasks
+const clearAllBtn = document.createElement("button")
+clearAllBtn.textContent = "clear all"
+clearAllBtn.className = "buttons"
+
+// clear completed tasks
+const clearCompletedBtn = document.createElement("button")
+clearCompletedBtn.textContent = "clear comleted tasks"
+clearCompletedBtn.className = "buttons"
+
+//buttons div container 
+const buttonsContainer = document.createElement("div") 
+buttonsContainer.className = "buttons-container";
+buttonsContainer.appendChild(clearAllBtn);
+buttonsContainer.appendChild(clearCompletedBtn);
+rootTS.appendChild(buttonsContainer);
+
+clearAllBtn.addEventListener("click",()=>{
+  taskList.innerHTML = "";
+  taskCompleted.innerHTML = "";
+  localStorage.removeItem("todoTasks");
+});
+
+clearCompletedBtn.addEventListener("click",()=>{
+  taskCompleted.innerHTML = "";
+  saveTasks();
+})
+
+// save data to local storage
 function saveTasks() {
   const tasks: { text: string; completed: boolean }[] = [];
 
@@ -59,7 +88,7 @@ function saveTasks() {
  
   localStorage.setItem("todoTasks",JSON.stringify(tasks))
 }
-
+// load data from local storage
 function loadTasks(){
   const tasksJson = localStorage.getItem("todoTasks")
   if(!tasksJson)return;
